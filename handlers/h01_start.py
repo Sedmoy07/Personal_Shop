@@ -2,7 +2,9 @@ from aiogram import Router, F
 from aiogram.types import Message, FSInputFile
 from aiogram.filters import CommandStart
 
-from keyboards.reply import start_keyboard
+from database.utils import db_register_user
+from handlers.h02_get_contact import show_main_menu
+from keyboards.reply import start_keyboard, phone_button
 
 router = Router()
 
@@ -27,6 +29,7 @@ async def handle_start_button(message: Message):
 
 async def handle_start(message: Message):
     await register_user(message)
+
 
 async def register_user(message: Message):
     """регистрация пользователя и доступ к основному меню"""
