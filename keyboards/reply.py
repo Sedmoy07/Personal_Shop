@@ -12,7 +12,7 @@ def start_keyboard():
     )
 
 def phone_button():
-    builder = ReplyKeyboardMarkup()
+    builder = ReplyKeyboardBuilder()
     builder.button(text="Предоставьте номер телефона", request_contact=True)
     return builder.as_markup(resize_keyboard=True)
 
