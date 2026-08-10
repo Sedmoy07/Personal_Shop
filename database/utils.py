@@ -8,6 +8,7 @@ from sqlalchemy import update, select, func, join
 def get_session():
     return Session(engine)
 
+
 def db_register_user(full_name: str, chat_id: int):
     """Регистрация пользователя в базе"""
 
@@ -20,13 +21,15 @@ def db_register_user(full_name: str, chat_id: int):
     except IntegrityError:
         return True
 
-def db_update_user(chat_id:int, phone:str):
+
+def db_update_user(chat_id: int, phone: str):
     """Получаем телефон пользователя из базы данных"""
 
     with get_session() as session:
         query = update(Users).where(Users.telegram == chat_id).values(phone=phone)
         session.execute(query)
         session.commit()
+
 
 def db_create_user_cart(chat_id):
     """Создание карзины пользователя после регистрации"""
@@ -40,18 +43,32 @@ def db_create_user_cart(chat_id):
     except IntegrityError:
         return False
 
+
 def db_get_all_category():
     """Получение всех категорий"""
     with get_session() as session:
         query = select(Categories)
         return session.scalars(query).all()
 
-def db_get_total_price(chat_id):
-    """Получение финальной цены"""
+
+def db_get_finally_price(chat_id):
+    """Получение итоговой цены"""
     with get_session() as session:
         query = select(func.sum(FinallyCarts.final_price)).select_from(
-            join(Carts, FinallyCarts, Carts.id == FinallyCarts.cart_id)
-            .join(Users, Users.id == Carts.user_id)
-            .where(Users.telegram == chat_id)
-        )
+            join(Carts, FinallyCarts, Carts.id == FinallyCarts.cart_id)).join(Users, Users.id == Carts.user_id).where(
+            Users.telegram == chat_id)
         return session.execute(query).fetchone()[0]
+
+
+def db_get_last_orders(chat_id, limit=10):
+    """Получение истории заказов"""
+    with get_session() as session:
+        query = (
+            select(Orders).
+            join(Carts, Orders.cart_id == Carts.id).
+            join(Users, Users.id == Carts.user_id).
+            where(Users.telegram == chat_id).
+            order_by(Orders.id.desc()).
+            limit(limit)
+        )
+        return session.scalars(query).all()

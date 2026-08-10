@@ -1,5 +1,5 @@
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-from database.utils import db_get_all_category
+from database.utils import db_get_all_category, db_get_finally_price
 
 
 def create_categories_menu(chat_id):
