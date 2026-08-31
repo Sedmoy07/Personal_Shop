@@ -15,3 +15,6 @@ def create_categories_menu(chat_id):
 
     builder.adjust(2, 1)
     return builder.as_markup()
+
+def show_product_by_category(category_id):
+    builder = InlineKeyboardBuilder()
