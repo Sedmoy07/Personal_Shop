@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.exceptions import TelegramBadRequest
-from aiogram.types import CallbackQuery, InlineKeyboardMarkup
+from aiogram.types import CallbackQuery
 
 from keyboards.inline import show_product_by_category
 
