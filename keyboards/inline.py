@@ -24,5 +24,16 @@ def show_product_by_category(category_id):
     builder = InlineKeyboardBuilder()
     products = db_get_products(category_id)
     [builder.button(text=product.product_name, callback_data=f"product_view{product.id}") for product in products]
-    builder.row(InlineKeyboardButton(text="Назад", callback_data = "from_detail_to_category"))
+    builder.row(InlineKeyboardButton(text="Назад", callback_data = "return_to_category"))
+    return builder.as_markup(resize_keyboard=True)
+
+def quantity_cart_controls(quantity = 1):
+    """Изменение кол-ва товаров в корзине"""
+    builder = InlineKeyboardBuilder()
+    builder.button(text = "-", callback_data = "action minus")
+    builder.button(text =str(quantity), callback_data = "quantity")
+    builder.button(text = "+", callback_data = "action plus")
+    builder.button(text = "положить в корзину", callback_data = "положить в корзину")
+    builder.button(text="back", callback_data="from_detail_to_category")
+    builder.adjust(3, 1, 1)
     return builder.as_markup(resize_keyboard=True)

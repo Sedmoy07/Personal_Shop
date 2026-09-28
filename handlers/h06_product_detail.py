@@ -1,8 +1,11 @@
 from aiogram import Router, F, Bot
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery, FSInputFile, InlineKeyboardMarkup
 
 from bot_utils.message_utils import text_for_caption
-from database.utils import db_get_products_by_id, db_get_user_cart, db_add_or_update_item
+from database.utils import db_get_products_by_id, db_get_user_cart, db_add_or_update_item, db_get_all_category
+from keyboards.inline import quantity_cart_controls, create_categories_menu
+from keyboards.reply import phone_button
 
 router = Router()
 
@@ -40,11 +43,32 @@ async def show_product_detail(callback: CallbackQuery, bot: Bot):
                               parse_mode="html",
                               reply_markup=quantity_cart_controls())
     else:
-        await ask_for_phne(chat_id, bot: Bot)
+        await ask_for_phone(chat_id, bot)
 
 
 async def ask_for_phone(chat_id: int, bot: Bot):
     """Запрос телефона при авторизации"""
-    await bot.delete_message(chat_id=chat_id, text="Предоставте номер телефона для оформления заказа",
-                             reply_markuo=phone_button())
-    chat_id =
+    await bot.send_message(chat_id=chat_id, text="Предоставте номер телефона для оформления заказа",
+                           reply_markup=phone_button())
+
+
+@router.callback_query(F.data == "from_detail_to_category")
+async def handle_back_to_category(callback: CallbackQuery, bot: Bot):
+    """Возращаемся к списку всех категорий"""
+    chat_id = callback.message.chat.id
+    message_id = callback.message.message_id
+
+    try:
+        await bot.delete_message(chat_id, message_id)
+    except TelegramBadRequest:
+        pass
+
+    categories =db_get_all_category()
+    if not categories:
+        await bot.send_message(chat_id=chat_id, text="Категории отсутствуют")
+        return
+
+    keyboard = create_categories_menu(chat_id)
+    await bot.send_message(chat_id=chat_id, text="Выберите категории", reply_markup=keyboard)
+    await callback.answer()
+
