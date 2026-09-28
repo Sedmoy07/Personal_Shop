@@ -30,9 +30,9 @@ def show_product_by_category(category_id):
 def quantity_cart_controls(quantity = 1):
     """Изменение кол-ва товаров в корзине"""
     builder = InlineKeyboardBuilder()
-    builder.button(text = "-", callback_data = "action minus")
+    builder.button(text = "-", callback_data = "action -")
     builder.button(text =str(quantity), callback_data = "quantity")
-    builder.button(text = "+", callback_data = "action plus")
+    builder.button(text = "+", callback_data = "action +")
     builder.button(text = "положить в корзину", callback_data = "положить в корзину")
     builder.button(text="back", callback_data="from_detail_to_category")
     builder.adjust(3, 1, 1)
