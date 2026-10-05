@@ -139,3 +139,9 @@ def db_add_or_update_item(
     except Exception as e:
         print(e)
         return {"status":"error"}
+
+def db_get_product_by_name():
+    """получаем продукт по имени"""
+    with get_session() as session:
+        query = select(Products).where(Products.product_name == "")
+        return session.scalars(query)
