@@ -140,7 +140,7 @@ def db_add_or_update_item(
         print(e)
         return {"status":"error"}
 
-def db_get_product_by_name():
+def db_get_product_by_name(product_name):
     """получаем продукт по имени"""
     with get_session() as session:
         query = select(Products).where(Products.product_name == "")
