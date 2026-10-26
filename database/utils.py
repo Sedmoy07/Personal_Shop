@@ -145,3 +145,6 @@ def db_get_product_by_name(product_name):
     with get_session() as session:
         query = select(Products).where(Products.product_name == "")
         return session.scalars(query)
+
+def db_get_cart_items(chat_id):
+    pass
